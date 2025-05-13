@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Thread Analysis Results</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        .thread-info { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .thread-info p { margin: 5px 0; }
+        .comment { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 4px; background-color: #f9f9f9; }
+        .comment h3 { margin-top: 0; font-size: 1.1em; color: #555; }
+        .comment p { margin: 5px 0; }
+        .comment .label { font-weight: bold; }
+        .comment .text-snippet {
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px dashed #ccc;
+            padding: 5px;
+            margin-top: 5px;
+            background-color: #fff;
+        }
+        .back-link { display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; }
+        .back-link:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results for: <a href="{{ data.thread_url }}" target="_blank">{{ data.thread_title }}</a></h1>
+
+        <div class="thread-info">
+            <h2>Thread Information</h2>
+            <p><span class="label">Title:</span> {{ data.thread_title }}</p>
+            <p><span class="label">Author:</span> {{ data.thread_author }}</p>
+            <p><span class="label">Score:</span> {{ data.thread_score }}</p>
+            {% if data.thread_op_text %}
+            <p><span class="label">Original Post:</span></p>
+            <div class="text-snippet">
+                {{ data.thread_op_text }}
+            </div>
+            {% endif %}
+        </div>
+
+        <h2>Processed Comments ({{ data.processed_comments|length }})</h2>
+        {% if data.processed_comments %}
+            {% for comment in data.processed_comments %}
+            <div class="comment">
+                <h3>Comment by: {{ comment.author }} (Score: {{ comment.score }})</h3>
+                <p><span class="label">Original Text:</span></p>
+                <div class="text-snippet">{{ comment.text }}</div>
+                <p><span class="label">Summary:</span> {{ comment.summary }}</p>
+                <p><span class="label">Relevant:</span> {{ comment.relevance.is_relevant }}</p>
+                <p><span class="label">Reasoning:</span> {{ comment.relevance.reasoning }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments were processed or found.</p>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="back-link">Analyze Another Thread</a>
+    </div>
+</body>
+</html>
