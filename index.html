@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Thread Analyzer</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f6f7f8; 
+            color: #1a1a1b; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            background-color: #ffffff; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 { 
+            color: #ff4500; /* Reddit orange */
+            margin-bottom: 5px;
+        }
+        .header .subtitle {
+            color: #7c7c7c;
+            font-size: 16px;
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #1a1a1b;
+        }
+        input[type="url"], input[type="number"] { 
+            width: calc(100% - 22px); 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            font-size: 16px;
+        }
+        input[type="number"] { 
+            width: 80px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .options-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .options-label {
+            width: 120px;
+            margin-right: 10px;
+        }
+        button { 
+            background-color: #ff4500; /* Reddit orange */
+            color: white; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        button:hover { 
+            background-color: #e03d00; 
+        }
+        .error { 
+            color: #e53935; 
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196f3;
+            padding: 12px 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #0d47a1;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7c7c7c;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Reddit Thread Analyzer</h1>
+            <div class="subtitle">AI-powered insights into Reddit discussions</div>
+        </div>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="error">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" id="analyze-form">
+            <div class="form-group">
+                <label for="reddit_url">Enter Reddit Thread URL:</label>
+                <input type="url" id="reddit_url" name="reddit_url" placeholder="https://www.reddit.com/r/subreddit/comments/..." required>
+            </div>
+
+            <div class="options-container">
+                <label class="options-label" for="comment_limit">Comment Limit:</label>
+                <input type="number" id="comment_limit" name="comment_limit" min="1" max="50" value="15">
+                <span style="margin-left: 10px; color: #7c7c7c; font-size: 14px;">(1-50 comments)</span>
+            </div>
+
+            <button type="submit" id="submit-button">Analyze Thread</button>
+        </form>
+
+        <div id="loading" class="loading">
+            <p>Analyzing thread... This may take 30-60 seconds depending on the number of comments.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>About this tool</h3>
+            <p>This tool uses <strong>Google's Gemini 2.5 Pro AI</strong> to analyze Reddit threads. It examines each comment to generate concise summaries and evaluates their relevance to the original post.</p>
+            <p>Enter any public Reddit thread URL above to get started. For best results, choose threads with meaningful discussions.</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Reddit Thread Analyzer | Built with Python, Flask, and Google Gemini AI
+    </footer>
+
+    <script>
+        document.getElementById('analyze-form').addEventListener('submit', function() {
+            document.getElementById('submit-button').disabled = true;
+            document.getElementById('submit-button').innerText = 'Analyzing...';
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

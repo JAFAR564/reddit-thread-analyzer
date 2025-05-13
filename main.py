@@ -5,7 +5,7 @@ import json # For potentially saving results
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def process_reddit_thread(thread_url, comment_limit=20, summary_model="anthropic/claude-3-haiku", relevance_model="anthropic/claude-3-haiku"):
+def process_reddit_thread(thread_url, comment_limit=20, summary_model="google/gemini-2.5-pro-preview", relevance_model="google/gemini-2.5-pro-preview"):
     """
     Main function to fetch, process, and analyze a Reddit thread.
 
@@ -80,9 +80,8 @@ if __name__ == "__main__":
     # --- Configuration ---
     TARGET_THREAD_URL = "https://www.reddit.com/r/Python/comments/1cophz1/what_are_your_goto_hacks_for_quickly_debugging/" # Replace with the URL you want to analyze
     MAX_COMMENTS_TO_PROCESS = 15 # Keep low for testing to manage cost/time
-    SUMMARY_MODEL_ID = "anthropic/claude-3-haiku-20240307" # Cost-effective option
-    # SUMMARY_MODEL_ID = "mistralai/mistral-7b-instruct" # Another option
-    RELEVANCE_MODEL_ID = "anthropic/claude-3-haiku-20240307" # Can use the same or different
+    SUMMARY_MODEL_ID = "google/gemini-2.5-pro-preview" # Update to Google's Gemini model
+    RELEVANCE_MODEL_ID = "google/gemini-2.5-pro-preview" # Using the same model for relevance
     # --- End Configuration ---
 
     logging.info(f"Starting analysis for: {TARGET_THREAD_URL}")
